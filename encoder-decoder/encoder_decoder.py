@@ -3,7 +3,7 @@ from keras.layers import Input, LSTM, GRU, Dense
 import numpy as np
 
 class EncoderDecoder:
-    def __init__(self, data, model_path, latent_dim=512, batch_size=64, 
+    def __init__(self, data, model_path='s2s.h5', latent_dim=512, batch_size=64, 
                  epochs=10, validation_split=0.2, rnn_type='lstm', optimizer='rmsprop'):
         self.data = data
         self.model_path = model_path
@@ -12,18 +12,19 @@ class EncoderDecoder:
         self.epochs = epochs
         self.validation_split = validation_split
         self.rnn_type = rnn_type
+        self.optimizer = optimizer
         
         # now build the training and inference networks
-        build_training_model()
-        build_inference_model()
+        self.build_training_model()
+        self.build_inference_model()
         
     def build_training_model(self):
         # the encoder
-        encoder_inputs = Input(shape=(None, self.data.input_max_len))
+        encoder_inputs = Input(shape=(None, self.data.num_input_chars))
         encoder_rnn, encoder_hidden_state = None, None
         
         if self.rnn_type == 'lstm':
-            self.encoder_rnn = LSTM(self.latent_dim, return_state=True)
+            encoder_rnn = LSTM(self.latent_dim, return_state=True)
             encoder_outputs, encoder_state_h, encoder_state_c = encoder_rnn(encoder_inputs)
             # discard the encoder output, keeping only the hidden state
             encoder_hidden_state = [encoder_state_h, encoder_state_c]
@@ -32,7 +33,7 @@ class EncoderDecoder:
             encoder_outputs, encoder_hidden_state = encoder_rnn(encoder_inputs)
         
         # the decoder
-        decoder_inputs = Input(shape=(None, self.data.output_max_len))
+        decoder_inputs = Input(shape=(None, self.data.num_output_chars))
         
         if self.rnn_type == 'lstm':
             decoder_rnn = LSTM(self.latent_dim, return_sequences=True, return_state=True)
@@ -84,7 +85,7 @@ class EncoderDecoder:
             
         # run it through a dense softmax layer
         decoder_outputs = self.decoder_dense(decoder_outputs)
-        self.decoder_model = Model([decoder_inputs] + decoder_hidden_state_input,
+        self.decoder_model = Model([self.decoder_inputs] + decoder_hidden_state_input,
                                    [decoder_outputs] + decoder_state)
 
 
@@ -97,17 +98,17 @@ class EncoderDecoder:
 
         
     def predict(self, input_seq):
-        return decode_sequence(input_seq)
+        return self.decode_sequence(input_seq)
 
 
     def translate(self, input_str):
         # transform input_str into a numpy array
         input_seq = np.zeros((1, self.data.input_max_len, self.data.num_input_chars))
         for i, char in enumerate(input_str):
-            input_seq[1, i, char2index(char)] = 1
+            input_seq[1, i, self.data.char2index(char, 'input')] = 1
         
         # predict the translation using the inference model
-        return predict(input_seq)
+        return self.predict(input_seq)
     
     
     def decode_sequence(self, input_seq):
@@ -132,7 +133,7 @@ class EncoderDecoder:
             
             # sample a token from the output distribution
             sampled_token_index = np.argmax(output_token_probs[0, -1, :])
-            sampled_char = index2char(sampled_token_index)
+            sampled_char = self.data.index2char(sampled_token_index)
             
             # add the sampled token to our output string
             output_str += sampled_char
