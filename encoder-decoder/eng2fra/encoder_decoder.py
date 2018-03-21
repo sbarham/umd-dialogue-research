@@ -1,5 +1,5 @@
 from keras.models import Model
-from keras.layers import Input, LSTM, GRU, Dense
+from keras.layers import Input, Bidirectional, LSTM, GRU, Dense
 import numpy as np
 
 class EncoderDecoder:
@@ -43,7 +43,7 @@ class EncoderDecoder:
             decoder_rnn = GRU(self.latent_dim, return_sequences=True, return_state=True)
             decoder_outputs, _ = decoder_rnn(decoder_inputs, 
                                              initial_state=encoder_hidden_state)
-        
+                
         decoder_dense = Dense(self.data.num_output_chars, activation='softmax')
         decoder_outputs = decoder_dense(decoder_outputs)
         
