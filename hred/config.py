@@ -24,7 +24,7 @@ class Config(dict):
         # allows us to restrict the size of the dataset used -- this might help in
         # memory restricted environments, or to speed up testing:
         self['restrict-sample-size'] = True
-        self['sample-size'] = 1000 # restrict the number of dialogues to an arbitrary number
+        self['sample-size'] = 5 # restrict the number of dialogues to an arbitrary number
         
         # use the max lengths already present in the corpus in case the user doesn't provide values
         # (this is usually preferred)
