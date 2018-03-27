@@ -1,7 +1,5 @@
 # Neural DSRT: Neural dialogue systems for humans
 
-## You have just found Neural DSRT.
-
 Neural DSRT (pronounced *dessert*) is a high-level neural dialogue systems API, written in Python and running on top of familiar deep-learning (DL) and machine-learning (ML) libraries like [Keras](https://github.com/keras-team/keras), [TensorFlow](https://github.com/tensorflow/tensorflow), and [scikit-learn](https://github.com/scikit-learn/scikit-learn). Its key purpose is *to enable rapid development and experimentation* in a burgeoning field otherwise bereft of high-level libraries for rapid-prototyping and experimentation.
 
 Read the documentation at [Keras.io](https://keras.io).
@@ -11,6 +9,7 @@ Keras is compatible with: __Python 2.7-3.6__.
 
 ------------------
 
+<!--
 
 ## Guiding principles
 
@@ -140,3 +139,5 @@ git clone https://github.com/keras-team/keras.git
 cd keras
 sudo python setup.py install
 ```
+
+-->
