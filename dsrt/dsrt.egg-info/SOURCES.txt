@@ -1,0 +1,15 @@
+MANIFEST.in
+dsrt/Config.py
+dsrt/Conversation.py
+dsrt/Decoder.py
+dsrt/DialogueCorpus.py
+dsrt/Encoder.py
+dsrt/EncoderDecoder.py
+dsrt/Factory.py
+dsrt/__init__.py
+dsrt/cli.py
+dsrt.egg-info/PKG-INFO
+dsrt.egg-info/SOURCES.txt
+dsrt.egg-info/dependency_links.txt
+dsrt.egg-info/requires.txt
+dsrt.egg-info/top_level.txt
